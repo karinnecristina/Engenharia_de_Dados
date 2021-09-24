@@ -5,6 +5,8 @@ import os
 import pandas as pd
 import numpy as np
 
+pd.set_option('display.max_columns', 20)
+
 # ==============================================
 # Pastas e subpastas do projeto
 # ==============================================
@@ -27,3 +29,24 @@ def validation(df,date:str,id_item:str):
         raise TypeError('A coluna não pode conter valores nulos.')
     else:
         return df
+    
+# ==============================================
+# Limpeza dos dados
+# ==============================================
+
+def clean(df,columns:list):
+    '''Padronizando os valores faltantes e removendo as linhas duplicadas'''
+    df[columns] = df[columns].replace(['***','#REF!'], np.nan)
+    df = df.drop_duplicates().reset_index(drop=True)
+    return df
+
+# ==============================================
+# Transformação dos dados
+# ==============================================
+
+def transformation(df,date):
+    '''Criando as colunas de mês, ano e mês_ano'''
+    df['month'] = df[date].dt.month.astype(str)
+    df['year'] = df[date].dt.year.astype(str)
+    df['month_year'] = df['month'] + '-' + df['year']
+    return df
