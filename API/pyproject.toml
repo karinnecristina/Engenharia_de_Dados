@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = "Capturando dados de uma API"
+authors = ["karinnecristina <karinnecristinapereira@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.26.0"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.15.0"
+black = "^21.9b0"
+flake8 = "^4.0.1"
+flake8-length = "^0.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
