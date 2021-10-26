@@ -173,7 +173,8 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,venv
 
 ### Personal
-.env
 .todo
 .flake8
+day-summary/
+DaySummaryIngestor.checkpoint
 poetry.lock
