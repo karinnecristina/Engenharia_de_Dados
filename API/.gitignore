@@ -176,5 +176,4 @@ pip-selfcheck.json
 .env
 .todo
 .flake8
-.pre-commit-config.yaml
 poetry.lock
