@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "aws"
+version = "0.1.0"
+description = "AWS"
+authors = ["karinnecristina <karinnecristinapereira@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "^1.19.7"
+pandas = "^1.3.4"
+python-dotenv = "^0.19.1"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+flake8 = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
