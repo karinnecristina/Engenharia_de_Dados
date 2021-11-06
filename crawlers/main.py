@@ -13,6 +13,7 @@ warnings.filterwarnings("ignore")
 #                   Driver
 # ==============================================
 driver = webdriver.Chrome("./src/chromedriver")
+time.sleep(5)
 
 # ==============================================
 #           Accessing the website
@@ -21,8 +22,6 @@ driver.get("https://www.fundsexplorer.com.br/")
 elem_funds = driver.find_element_by_xpath(
     '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
 ).click()
-
-time.sleep(5)
 
 # ==============================================
 #    Extracting real estate fund information
@@ -35,7 +34,8 @@ for element in funds:
     elem_funds = driver.find_element_by_name("fii")
     elem_funds.clear()
     elem_funds.send_keys(element)
-    elem_cmb = driver.find_element_by_xpath(f'//*[@id="item-{element}"]/a/span').click()
+    driver.find_element_by_xpath(f'//*[@id="item-{element}"]/a/span').click()
+    time.sleep(3)
 
     date = datetime.today().strftime("%d-%m-%Y %H:%M")
 
@@ -114,3 +114,5 @@ df = pd.DataFrame(
         "P/VP",
     ],
 )
+
+df.to_csv("funds.csv", sep=";", index=False)
