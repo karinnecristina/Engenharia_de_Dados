@@ -47,7 +47,7 @@ for element in wallet:
         elem_funds.clear()
         elem_funds.send_keys(element)
         driver.find_element_by_xpath(f'//*[@id="item-{element}"]/a/span').click()
-        time.sleep(3)
+        time.sleep(5)
 
         date = datetime.today().strftime("%d-%m-%Y %H:%M")
 
@@ -134,5 +134,3 @@ df = pd.DataFrame(
         "P/VP",
     ],
 )
-
-df.to_csv("funds.csv", sep=";", index=False)
