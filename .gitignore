@@ -174,7 +174,9 @@ pip-selfcheck.json
 
 ### Personal
 .todo
+*.csv
 .flake8
 ctest.py
+jenkins_home
 poetry.lock
 .pre-commit-config.yaml

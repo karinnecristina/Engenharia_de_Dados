@@ -1,0 +1,5 @@
+FROM jenkins/jenkins
+USER root
+RUN apt-get update
+COPY poetry.lock pyproject.toml ./
+RUN apt-get install -y python3-pip && pip install poetry && poetry install --no-dev
