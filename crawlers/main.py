@@ -1,7 +1,7 @@
 # ==============================================
 #                 Libraries
 # ==============================================
-import pandas as pd
+import csv
 import time
 import warnings
 from datetime import datetime
@@ -115,22 +115,9 @@ for element in wallet:
 driver.close()
 
 # ==============================================
-#    DataFrame with collected information
+#    csv file with collected information
 # ==============================================
 
-df = pd.DataFrame(
-    data,
-    columns=[
-        "Data",
-        "Codigo",
-        "Preco",
-        "Liquidez",
-        "Ultimo_Rendimento",
-        "Variacao",
-        "Dividend_Yield",
-        "Patrimonio_Liquido",
-        "Valor_Patrimonial",
-        "Rentabilidade_mes",
-        "P/VP",
-    ],
-)
+with open("fundos.csv", "a") as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
