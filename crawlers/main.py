@@ -41,83 +41,68 @@ wallet = [
 
 data = []
 
-for element in wallet:
-    try:
-        elem_funds = driver.find_element_by_name("fii")
-        elem_funds.clear()
-        elem_funds.send_keys(element)
-        driver.find_element_by_xpath(f'//*[@id="item-{element}"]/a/span').click()
-        time.sleep(5)
 
-        date = datetime.today().strftime("%d-%m-%Y %H:%M")
+def extraction_by_xpath(xpath: str, driver=driver) -> str:
+    return driver.find_element_by_xpath(xpath).text
 
-        cod = driver.find_element_by_xpath(
-            "/html/body/section/section/div/div/div/div[2]/h1"
-        ).text
 
-        price = driver.find_element_by_xpath(
-            "/html/body/section/section/div/div/div/div[3]/div/span[1]"
-        ).text
+if __name__ == "__main__":
+    for element in wallet:
+        try:
+            elem_funds = driver.find_element_by_name("fii")
+            elem_funds.clear()
+            elem_funds.send_keys(element)
+            driver.find_element_by_xpath(f'//*[@id="item-{element}"]/a/span').click()
+            time.sleep(5)
 
-        variation = driver.find_element_by_xpath(
-            "/html/body/section/section/div/div/div/div[3]/div/span[2]"
-        ).text
+            info = {
+                "Data": datetime.strftime(datetime.now(), "%d/%m/%Y %H:%M"),
+                "Codigo": extraction_by_xpath(
+                    "/html/body/section/section/div/div/div/div[2]/h1"
+                ),
+                "Preco": extraction_by_xpath(
+                    "/html/body/section/section/div/div/div/div[3]/div/span[1]"
+                ),
+                "Variacao": extraction_by_xpath(
+                    "/html/body/section/section/div/div/div/div[3]/div/span[2]"
+                ),
+                "Liquidez": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[1]/span[2]"
+                ),
+                "Ultimo_Rendimento": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[2]/span[2]"
+                ),
+                "Dividend_Yield": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[3]/span[2]"
+                ),
+                "Patrimonio_Liquido": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[4]/span[2]"
+                ),
+                "Valor_Patrimonial": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[5]/span[2]"
+                ),
+                "Rentabilidade_Mes": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[6]/span[2]"
+                ),
+                "P/VP": extraction_by_xpath(
+                    "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[7]/span[2]"
+                ),
+            }
+            data.append(info)
 
-        liquidez = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[1]/span[2]"
-        ).text
+            driver.execute_script("window.history.go(-1)")
+            time.sleep(2)
+        except Exception as e:
+            print(f"Os dados não foram coletados: {e}")
 
-        last_income = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[2]/span[2]"
-        ).text
-
-        dividend_yield = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[3]/span[2]"
-        ).text
-
-        patrimony = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[4]/span[2]"
-        ).text
-
-        equity_value = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[5]/span[2]"
-        ).text
-
-        profitability_month = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[6]/span[2]"
-        ).text
-
-        p_vp = driver.find_element_by_xpath(
-            "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[7]/span[2]"
-        ).text
-
-        data.append(
-            (
-                date,
-                cod,
-                price,
-                liquidez,
-                last_income,
-                variation,
-                dividend_yield,
-                patrimony,
-                equity_value,
-                profitability_month,
-                p_vp,
-            )
-        )
-
-        driver.execute_script("window.history.go(-1)")
-        time.sleep(2)
-    except Exception as e:
-        print(f"Os dados não foram coletados: {e}")
-
-driver.close()
+    driver.close()
 
 # ==============================================
 #    csv file with collected information
 # ==============================================
 
-with open("fundos.csv", "a") as file:
-    writer = csv.writer(file)
+with open("fundos.csv", "a") as csv_file:
+    columns_name = data[0].keys()
+    writer = csv.DictWriter(csv_file, columns_name)
+    writer.writeheader()
     writer.writerows(data)
