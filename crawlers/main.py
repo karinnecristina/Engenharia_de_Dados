@@ -1,7 +1,8 @@
 # ==============================================
 #                 Libraries
 # ==============================================
-import csv
+
+import pandas as pd
 import time
 import warnings
 from datetime import datetime
@@ -44,6 +45,12 @@ data = []
 
 def extraction_by_xpath(xpath: str, driver=driver) -> str:
     return driver.find_element_by_xpath(xpath).text
+
+
+def save_data(filename):
+    with open(filename, "a") as csv_file:
+        df.to_csv(csv_file, sep=";", header=csv_file.tell() == 0, index=False)
+    return df
 
 
 if __name__ == "__main__":
@@ -89,6 +96,7 @@ if __name__ == "__main__":
                 ),
             }
             data.append(info)
+            df = pd.DataFrame.from_dict(data)
 
             driver.execute_script("window.history.go(-1)")
             time.sleep(2)
@@ -101,8 +109,4 @@ if __name__ == "__main__":
 #    csv file with collected information
 # ==============================================
 
-with open("fundos.csv", "a") as csv_file:
-    columns_name = data[0].keys()
-    writer = csv.DictWriter(csv_file, columns_name)
-    writer.writeheader()
-    writer.writerows(data)
+save_data(filename="fundos.csv")
