@@ -176,7 +176,6 @@ pip-selfcheck.json
 .todo
 *.csv
 .flake8
-ctest.py
 jenkins_home
 poetry.lock
 .pre-commit-config.yaml
