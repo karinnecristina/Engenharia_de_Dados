@@ -6,9 +6,15 @@ import os
 import pandas as pd
 import time
 import warnings
+
 from selenium import webdriver
 from datetime import datetime
 from abc import ABC
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
+
 
 warnings.filterwarnings("ignore")
 
@@ -29,17 +35,34 @@ DRIVERS_DIR = os.path.join(BASE_DIR, "./drivers")
 class FundsExplorer(ABC):
     def __init__(self, wallet: list[str]) -> None:
         self.wallet = wallet
+        self.chrome_options = Options()
+        self.chrome_options.add_argument("--headless")
         self.driver = webdriver.Chrome(os.path.join(DRIVERS_DIR, "chromedriver"))
         self.driver.get("https://www.fundsexplorer.com.br/")
-        self.driver.find_element_by_xpath(
-            '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
-        ).click()
+
+    def _access_website(self) -> None:
+        try:
+            self.driver.find_element_by_xpath(
+                '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
+            ).click()
+            try:
+                WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH, '//*[@id="popup-close-button"]')
+                    )
+                ).click()
+            except:
+                pass
+        except:
+            self.driver.close()
 
     def extraction_by_xpath(self, xpath: str) -> str:
         return self.driver.find_element_by_xpath(xpath).text
 
     def get_data(self) -> list:
+        self._access_website()
         data = []
+
         for element in self.wallet:
             try:
                 elem_funds = self.driver.find_element_by_name("fii")
@@ -87,14 +110,19 @@ class FundsExplorer(ABC):
 
                 self.driver.execute_script("window.history.go(-1)")
                 time.sleep(2)
+
             except Exception as error:
                 print(error)
-        self.driver.close()
+                self.driver.close()
+
         return data
 
     def save_data(self, filename: str) -> csv:
         data = self.get_data()
+        self.driver.close()
+
         with open(os.path.join(DATA_DIR, filename), "a") as csv_file:
-            df = pd.DataFrame.from_dict(data)
+            df = pd.DataFrame(data)
             df.to_csv(csv_file, sep=";", header=csv_file.tell() == 0, index=False)
-        return df
+            print("Os dados foram salvos com sucesso!")
+        return data
