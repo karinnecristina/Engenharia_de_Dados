@@ -37,10 +37,13 @@ class FundsExplorer(ABC):
         self.wallet = wallet
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")
-        self.driver = webdriver.Chrome(os.path.join(DRIVERS_DIR, "chromedriver"))
+        self.driver = webdriver.Chrome(
+            os.path.join(DRIVERS_DIR, "chromedriver"), options=self.chrome_options
+        )
         self.driver.get("https://www.fundsexplorer.com.br/")
 
     def _access_website(self) -> None:
+        """[Access the interest page]"""
         try:
             self.driver.find_element_by_xpath(
                 '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
@@ -57,9 +60,22 @@ class FundsExplorer(ABC):
             self.driver.close()
 
     def extraction_by_xpath(self, xpath: str) -> str:
+        """[Extracts text elements from a web page]
+
+        Args:
+            xpath (str): [Element path]
+
+        Returns:
+            String: [Elements that contain specific text on the page]
+        """
         return self.driver.find_element_by_xpath(xpath).text
 
     def get_data(self) -> list:
+        """[Extracts the data of interest]
+
+        Returns:
+            List: [List with collected data]
+        """
         self._access_website()
         data = []
 
@@ -76,38 +92,36 @@ class FundsExplorer(ABC):
                 info = {
                     "Data": datetime.strftime(datetime.now(), "%d/%m/%Y %H:%M"),
                     "Codigo": self.extraction_by_xpath(
-                        "/html/body/section/section/div/div/div/div[2]/h1"
+                        '//*[@id="head"]/div/div/div/div[2]/h1'
                     ),
-                    "Preco": self.extraction_by_xpath(
-                        "/html/body/section/section/div/div/div/div[3]/div/span[1]"
-                    ),
+                    "Preco": self.extraction_by_xpath('//*[@id="stock-price"]/span[1]'),
                     "Variacao": self.extraction_by_xpath(
-                        "/html/body/section/section/div/div/div/div[3]/div/span[2]"
+                        '//*[@id="stock-price"]/span[2]'
                     ),
                     "Liquidez": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[1]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[1]/span[2]'
                     ),
                     "Ultimo_Rendimento": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[2]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[2]/span[2]'
                     ),
                     "Dividend_Yield": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[3]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[3]/span[2]'
                     ),
                     "Patrimonio_Liquido": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[4]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[4]/span[2]'
                     ),
                     "Valor_Patrimonial": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[5]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[5]/span[2]'
                     ),
                     "Rentabilidade_Mes": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[6]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[6]/span[2]'
                     ),
                     "P/VP": self.extraction_by_xpath(
-                        "/html/body/section/div[1]/section[1]/div/div/div/div/div/div[7]/span[2]"
+                        '//*[@id="main-indicators-carousel"]/div/div/div[7]/span[2]'
                     ),
                 }
-                data.append(info)
 
+                data.append(info)
                 self.driver.execute_script("window.history.go(-1)")
                 time.sleep(2)
 
@@ -118,6 +132,14 @@ class FundsExplorer(ABC):
         return data
 
     def save_data(self, filename: str) -> csv:
+        """[Saves the data in a file with a .csv extension]
+
+        Args:
+            filename (str): [File name]
+
+        Returns:
+            CSV: [File with collected data]
+        """
         data = self.get_data()
         self.driver.close()
 
