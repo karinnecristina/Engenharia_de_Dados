@@ -116,7 +116,7 @@ class FundsExplorer(ABC):
                     "Rentabilidade_Mes": self.extraction_by_xpath(
                         '//*[@id="main-indicators-carousel"]/div/div/div[6]/span[2]'
                     ),
-                    "P/VP": self.extraction_by_xpath(
+                    "P_VP": self.extraction_by_xpath(
                         '//*[@id="main-indicators-carousel"]/div/div/div[7]/span[2]'
                     ),
                 }
@@ -147,4 +147,4 @@ class FundsExplorer(ABC):
             df = pd.DataFrame(data)
             df.to_csv(csv_file, sep=";", header=csv_file.tell() == 0, index=False)
             print("Os dados foram salvos com sucesso!")
-        return data
+        return df
