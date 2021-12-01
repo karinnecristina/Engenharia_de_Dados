@@ -10,6 +10,7 @@ pandas = "^1.3.4"
 selenium = "^4.0.0"
 apache-airflow = "^2.2.2"
 pytest = "^6.2.5"
+chromedriver-autoinstaller = "^0.2.2"
 
 [tool.poetry.dev-dependencies]
 
