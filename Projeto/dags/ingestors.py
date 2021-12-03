@@ -40,8 +40,9 @@ class FundsExplorer(ABC):
         self.wallet = wallet
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")
-        self.options.binary_location = "/usr/bin/google-chrome-stable"
-        self.driver = webdriver.Chrome(options=self.chrome_options)
+        self.browser = webdriver.Remote(
+            command_executor="localhost:4444/wd/hub", options=self.chrome_options
+        )
         self.driver.get("https://www.fundsexplorer.com.br/")
 
     def _access_website(self) -> None:
