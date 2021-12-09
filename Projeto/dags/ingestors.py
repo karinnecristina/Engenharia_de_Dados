@@ -1,23 +1,17 @@
-# ==============================================
-#                 Libraries
-# ==============================================
 import csv
 import os
 import pandas as pd
 import time
 import warnings
-import chromedriver_autoinstaller
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from datetime import datetime
 from abc import ABC
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
 
-
-chromedriver_autoinstaller.install()
 warnings.filterwarnings("ignore")
 
 # ==============================================
@@ -30,29 +24,31 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 DRIVERS_DIR = os.path.join(BASE_DIR, "drivers")
 
 
-# ==============================================
-#           Accessing the website
-# ==============================================
-
-
 class FundsExplorer(ABC):
-    def __init__(self, wallet: str) -> None:
+    def __init__(self, wallet: str, *options: str) -> None:
         self.wallet = wallet
-        self.chrome_options = Options()
-        self.chrome_options.add_argument("--headless")
-        self.browser = webdriver.Remote(
-            command_executor="localhost:4444/wd/hub", options=self.chrome_options
+        self.chrome_options = webdriver.ChromeOptions()
+        if options is not None:
+            for option in options:
+                self.chrome_options.add_argument(option)
+
+        self.chrome_service = Service(
+            executable_path=os.path.join(DRIVERS_DIR, "chromedriver")
         )
-        self.driver.get("https://www.fundsexplorer.com.br/")
+        self.browser = webdriver.Chrome(
+            service=self.chrome_service, options=self.chrome_options
+        )
+        self.browser.get("https://www.fundsexplorer.com.br/")
 
     def _access_website(self) -> None:
         """[Access the interest page]"""
         try:
-            self.driver.find_element_by_xpath(
-                '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
+
+            self.browser.find_element(
+                By.XPATH, '//*[@id="quick-access"]/div[2]/div[1]/div[1]'
             ).click()
             try:
-                WebDriverWait(self.driver, 10).until(
+                WebDriverWait(self.browser, 10).until(
                     EC.element_to_be_clickable(
                         (By.XPATH, '//*[@id="popup-close-button"]')
                     )
@@ -60,22 +56,19 @@ class FundsExplorer(ABC):
             except:
                 pass
         except:
-            self.driver.close()
+            self.browser.close()
 
     def extraction_by_xpath(self, xpath: str) -> str:
         """[Extracts text elements from a web page]
-
         Args:
             xpath (str): [Element path]
-
         Returns:
             String: [Elements that contain specific text on the page]
         """
-        return self.driver.find_element_by_xpath(xpath).text
+        return self.browser.find_element(By.XPATH, xpath).text
 
     def get_data(self) -> list:
         """[Extracts the data of interest]
-
         Returns:
             List: [List with collected data]
         """
@@ -84,11 +77,11 @@ class FundsExplorer(ABC):
 
         for element in self.wallet:
             try:
-                elem_funds = self.driver.find_element_by_name("fii")
+                elem_funds = self.browser.find_element(By.NAME, "fii")
                 elem_funds.clear()
                 elem_funds.send_keys(element)
-                self.driver.find_element_by_xpath(
-                    f'//*[@id="item-{element}"]/a/span'
+                self.browser.find_element(
+                    By.XPATH, f'//*[@id="item-{element}"]/a/span'
                 ).click()
                 time.sleep(5)
 
@@ -125,26 +118,24 @@ class FundsExplorer(ABC):
                 }
 
                 data.append(info)
-                self.driver.execute_script("window.history.go(-1)")
+                self.browser.execute_script("window.history.go(-1)")
                 time.sleep(2)
 
             except Exception as error:
                 print(error)
-                self.driver.close()
+                self.browser.close()
 
         return data
 
     def save_data(self, filename: str) -> csv:
         """[Saves the data in a file with a .csv extension]
-
         Args:
             filename (str): [File name]
-
         Returns:
             CSV: [File with collected data]
         """
         data = self.get_data()
-        self.driver.close()
+        self.browser.close()
 
         with open(os.path.join(DATA_DIR, filename), "a") as csv_file:
             df = pd.DataFrame(data)
