@@ -2,10 +2,25 @@ import airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import timedelta
-from ingestors import FundsExplorer
+from selenium_dag.ingestors import FundsExplorer
 
 
-ingestor = FundsExplorer(wallet=["HGCR11"])
+ingestor = FundsExplorer(
+    [
+        "HGCR11",
+        "XPLG11",
+        "KNRI11",
+        "HGRU11",
+        "TORD11",
+        "VINO11",
+        "IRDM11",
+        "MXRF11",
+        "MGFF11",
+    ],
+    "--disable-gpu",
+    "--no-sandbox",
+    "--headless",
+)
 
 args = {"owner": "airflow", "start_date": airflow.utils.dates.days_ago(0)}
 
@@ -16,6 +31,8 @@ dag = DAG(
     dagrun_timeout=timedelta(minutes=60),
 )
 
-t1 = PythonOperator(task_id="get_data", python_callable=ingestor.get_data, dag=dag)
+t1 = PythonOperator(
+    task_id="access_website", python_callable=ingestor._access_website, dag=dag
+)
 
 t1
