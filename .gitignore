@@ -175,6 +175,7 @@ pip-selfcheck.json
 ### Personal
 .todo
 *.csv
+*selenium_dag
 .flake8
 jenkins_home
 poetry.lock
