@@ -16,6 +16,6 @@ O projeto será desenvolvido com base no conhecimento adquirido no bootcamp de e
 #### Etapas
 
 - [x] Coleta de dados de [Fundos imobiliários](https://www.fundsexplorer.com.br/) com **Selenium** 
-- [ ] Automatização da coleta com **Airflow** 
-- [ ] Armazenamento dos dados na nuvem - (Data Lake)  **AWS**
+- [x] Automatização da coleta com **Airflow** 
+- [x] Armazenamento dos dados na nuvem - (Data Lake)  **AWS**
 - [ ] Processamento de dados com **Spark**
