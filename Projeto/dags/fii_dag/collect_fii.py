@@ -34,6 +34,11 @@ class AWS_Airflow(ABC):
         )
 
     def _validate_bucket(self) -> bool:
+        """[Checks if there is already a bucket created and what is its name]
+
+        Returns:
+           Bool: [False if bucket does not exist.]
+        """
         try:
             self.s3_client.list_buckets()["Buckets"][0]["Name"]
         except IndexError:
@@ -41,7 +46,12 @@ class AWS_Airflow(ABC):
             return True
         return False
 
-    def _create_bucket(self, name) -> bool:
+    def _create_bucket(self, name: str) -> bool:
+        """[Create an s3 bucket in aws]
+
+        Returns:
+           Bool: [True if bucket was created successfully]
+        """
         try:
             self.s3_client.create_bucket(Bucket=name)
         except ClientError as e:
@@ -52,6 +62,11 @@ class AWS_Airflow(ABC):
 
 class FundsExplorer(AWS_Airflow):
     def collect_data(self) -> pd.DataFrame:
+        """[Collects data from the web page]
+
+        Returns:
+            DataFrame: [Dataframe type file]
+        """
         response = requests.get(self.url, headers=self.headers)
         if response.status_code == 200:
             try:
@@ -65,6 +80,7 @@ class FundsExplorer(AWS_Airflow):
                 print(e)
 
     def start_bucket(self) -> None:
+        """[Create bucket in s3 only if it doesn't already exist]"""
         if self._validate_bucket():
             self._create_bucket("kay-s3-bucket-fii")
             print("bucket created successfully: kay-s3-bucket-fii")
@@ -73,6 +89,7 @@ class FundsExplorer(AWS_Airflow):
             print(f"bucket already created: {name}")
 
     def send_files_s3(self) -> None:
+        """[Save collected data in bucket by creation date]"""
         data_proc = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.s3_resource.Bucket("kay-s3-bucket-fii").upload_file(
             "/opt/airflow/outputs/fundos.csv",
