@@ -26,7 +26,7 @@ args = {
 dag = DAG(
     dag_id="fundos_imobiliarios",
     default_args=args,
-    schedule_interval="31 18 * * *",
+    schedule_interval="40 13,19 * * 1-5",
     start_date=datetime(2021, 12, 17),
     catchup=False,
 )
