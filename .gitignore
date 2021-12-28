@@ -180,4 +180,3 @@ pip-selfcheck.json
 *selenium_dag
 jenkins_home
 poetry.lock
-data_collect
