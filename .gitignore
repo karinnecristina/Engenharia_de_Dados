@@ -174,9 +174,10 @@ pip-selfcheck.json
 
 ### Personal
 .todo
+.flake8
+.pre-commit-config.yaml
 *.csv
 *selenium_dag
-.flake8
 jenkins_home
 poetry.lock
-.pre-commit-config.yaml
+data_collect
