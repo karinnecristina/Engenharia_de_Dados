@@ -34,10 +34,10 @@ O projeto será desenvolvido com base no conhecimento adquirido no bootcamp de e
 
 ## ⚙️ Passo a passo para reproduzir o projeto
 #### Instalação do docker:
-[Linux]("https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-pt") -
-[Windows]("https://docs.docker.com/desktop/windows/install/")
+[Linux](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-pt) -
+[Windows](https://docs.docker.com/desktop/windows/install/)
 #### Instalação do poetry (windows / linux):
-[poetry]("https://python-poetry.org/docs/")
+[poetry](https://python-poetry.org/docs/)
 
 #### Configurando o ambiente:
 ```bash
