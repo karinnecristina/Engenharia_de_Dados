@@ -1,0 +1,10 @@
+INSERT INTO vendedores(nome) VALUES ('Armando Lago');
+INSERT INTO vendedores(nome) VALUES ('Capitolino Bahía');
+INSERT INTO vendedores(nome) VALUES ('Daniel Pirajá');
+INSERT INTO vendedores(nome) VALUES ('Godo Capiperibe');
+INSERT INTO vendedores(nome) VALUES ('Hélio Liberato');
+INSERT INTO vendedores(nome) VALUES ('Iberê Lacerda');
+INSERT INTO vendedores(nome) VALUES ('Jéssica Castelão');
+INSERT INTO vendedores(nome) VALUES ('Napoleão Méndez');
+INSERT INTO vendedores(nome) VALUES ('Simão Rivero');
+INSERT INTO vendedores(nome) VALUES ('Tobias Furtado');
