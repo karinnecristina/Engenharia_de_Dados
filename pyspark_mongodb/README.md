@@ -3,5 +3,5 @@
 ## Conexão do pyspark com mongodb
 
 <p align="center">
-  <img src="Imagens/spark-mongodb.jpg" >
+  <img src="imagens/spark-mongodb.jpg" >
 </p>

@@ -3,5 +3,5 @@
 ## Conexão do pyspark com postgresql
 
 <p align="center">
-  <img src="Imagens/spark-postgres.jpg" >
+  <img src="imagens/spark-postgres.jpg" >
 </p>
